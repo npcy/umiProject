@@ -1,88 +1,77 @@
-import { Space, Table, Tag } from 'antd';
+import {Button, Space, Table} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React from 'react';
-
+import React,{useState,useEffect} from 'react';
+import {stuGet} from  '@/api/stu'
+import stu from "../../../mock/stu";
 interface DataType {
   key: string;
   name: string;
-  age: number;
-  address: string;
-  tags: string[];
+  score: number;
+  city: string;
+  time: string;
 }
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'Name',
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    render: (text, record, index) => index+1+'',
+  },
+  {
+    title: '姓名',
     dataIndex: 'name',
     key: 'name',
     render: text => <a>{text}</a>,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '分数',
+    dataIndex: 'score',
+    key: 'score',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: '城市',
+    dataIndex: 'city',
+    key: 'city',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: '时间',
+    key: 'time',
+    dataIndex: 'time',
   },
   {
-    title: 'Action',
+    title: '操作',
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
+        <Button type={"primary"} size={"small"}>编辑</Button>
+        <Button type={"primary"} danger size={"small"}>删除</Button>
       </Space>
     ),
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
 
-const App: React.FC = () => <Table columns={columns} dataSource={data} />;
+// const data: DataType[] = [  测试数据
+//   {
+//     key: '1',
+//     name: 'Joe Black',
+//     score: 100,
+//     city: '西安',
+//     time: '2022-10-10',
+//   },
+// ];
+export default function stuList(){
+  let [data,setData]=useState([])
+  useEffect(()=>{
+    stuGet().then((res: any)=>{
+      console.log(res);
+      setData(res.data)
+    })
+  },[])
+  return(
+    <Table columns={columns} dataSource={data} rowKey="objectId"/>
+  )
+}
 
-export default App;
+

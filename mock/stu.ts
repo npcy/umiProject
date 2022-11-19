@@ -9,13 +9,14 @@ export default {
   'GET /classes/stu': mockjs.mock({
     code: 200,
     msg: '学员列表加载成功',
-    'data |20': [
+    "data|20": [
       {
+        'objectId|+1':1,
         name: '@cname',
         score: '@integer(60,100)',
         city: '@city',
         time: '@date'
-      }
+      },
     ]
   }),
 }
